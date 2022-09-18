@@ -29,11 +29,12 @@ export default function Navbar() {
                   Wishlist
                 </a>
               </Link>
-              <Link href="/login">
-                <a className="font-medium mr-8 text-indigo-600 hover:text-indigo-500">
-                  Log in
-                </a>
-              </Link>
+              <a
+                href="#"
+                className="px-8 py-3 border text-base rounded-md font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+              >
+                Connect Wallet
+              </a>
             </div>
           </div>
         </nav>
