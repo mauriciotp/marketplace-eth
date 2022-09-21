@@ -1,9 +1,12 @@
 import { useWeb3 } from "@components/providers";
 import Link from "next/link";
 import { Button } from "@components/ui/common";
+import { useAccount } from "@components/web3/hooks/useAccount";
 
 export default function Navbar() {
   const { connect, isLoading, isWeb3Loaded } = useWeb3();
+
+  const { account } = useAccount();
 
   return (
     <section>
@@ -38,7 +41,17 @@ export default function Navbar() {
                   Loading...
                 </Button>
               ) : isWeb3Loaded ? (
-                <Button onClick={connect}>Connect</Button>
+                account ? (
+                  <Button
+                    hoverable={false}
+                    className="cursor-default"
+                    variant="red"
+                  >
+                    Hi there
+                  </Button>
+                ) : (
+                  <Button onClick={connect}>Connect</Button>
+                )
               ) : (
                 <Button
                   onClick={() =>
