@@ -42,11 +42,7 @@ export default function Navbar() {
                 </Button>
               ) : isWeb3Loaded ? (
                 account ? (
-                  <Button
-                    hoverable={false}
-                    className="cursor-default"
-                    variant="red"
-                  >
+                  <Button hoverable={false} className="cursor-default">
                     Hi there
                   </Button>
                 ) : (
@@ -65,6 +61,13 @@ export default function Navbar() {
           </div>
         </nav>
       </div>
+      {account && (
+        <div className="flex justify-end pt-1 sm:px-6 lg:px-8">
+          <div className="text-white bg-indigo-600 rounded-md p-2">
+            {account}
+          </div>
+        </div>
+      )}
     </section>
   );
 }
