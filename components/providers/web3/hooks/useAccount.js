@@ -19,7 +19,7 @@ export const handler = (web3, provider) => () => {
       provider.on("accountsChanged", (accounts) => {
         mutate(accounts[0] ?? null);
       });
-  }, [provider]);
+  }, [provider, mutate]);
 
   return {
     account: {
