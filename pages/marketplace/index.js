@@ -5,8 +5,10 @@ import { BaseLayout } from "@components/ui/layout";
 import { OrderModal } from "@components/ui/order";
 import { WalletBar } from "@components/ui/web3";
 import { getAllCourses } from "@content/courses/fetcher";
+import { useState } from "react";
 
 export default function Marketplace({ courses }) {
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const { account } = useAccount();
   const { network } = useNetwork();
 
@@ -30,13 +32,23 @@ export default function Marketplace({ courses }) {
             course={course}
             Footer={() => (
               <div className="mt-4">
-                <Button variant="lightPurple">Purchase</Button>
+                <Button
+                  variant="lightPurple"
+                  onClick={() => setSelectedCourse(course)}
+                >
+                  Purchase
+                </Button>
               </div>
             )}
           />
         )}
       </CourseList>
-      <OrderModal />
+      {selectedCourse && (
+        <OrderModal
+          course={selectedCourse}
+          onClose={() => setSelectedCourse(null)}
+        />
+      )}
     </BaseLayout>
   );
 }
