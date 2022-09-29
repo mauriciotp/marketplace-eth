@@ -2,6 +2,7 @@ import { useAccount, useNetwork } from "@components/hooks/web3";
 import { Button } from "@components/ui/common";
 import { CourseCard, CourseList } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
+import { OrderModal } from "@components/ui/order";
 import { WalletBar } from "@components/ui/web3";
 import { getAllCourses } from "@content/courses/fetcher";
 
@@ -35,6 +36,7 @@ export default function Marketplace({ courses }) {
           />
         )}
       </CourseList>
+      <OrderModal />
     </BaseLayout>
   );
 }
