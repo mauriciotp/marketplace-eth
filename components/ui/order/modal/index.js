@@ -1,17 +1,32 @@
+import { useEthPrice } from "@components/hooks/useEthPrice";
 import { Button, Modal } from "@components/ui/common";
 import { useEffect, useState } from "react";
 
+const defaultOrder = {
+  price: "",
+  email: "",
+  confirmationEmail: "",
+};
+
 export default function OrderModal({ course, onClose }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [order, setOrder] = useState(defaultOrder);
+  const [enablePrice, setEnablePrice] = useState(false);
+  const { eth } = useEthPrice();
 
   useEffect(() => {
     if (!!course) {
       setIsOpen(true);
+      setOrder({
+        ...defaultOrder,
+        price: eth.perItem,
+      });
     }
-  }, [course]);
+  }, [course, eth.perItem]);
 
   const closeModal = () => {
     setIsOpen(false);
+    setOrder(defaultOrder);
     onClose();
   };
 
@@ -32,7 +47,18 @@ export default function OrderModal({ course, onClose }) {
                   <label className="mb-2 font-bold">Price(eth)</label>
                   <div className="text-xs text-gray-700 flex">
                     <label className="flex items-center mr-2">
-                      <input type="checkbox" className="form-checkbox" />
+                      <input
+                        checked={enablePrice}
+                        onChange={({ target: { checked } }) => {
+                          setOrder({
+                            ...order,
+                            price: checked ? order.price : eth.perItem,
+                          });
+                          setEnablePrice(checked);
+                        }}
+                        type="checkbox"
+                        className="form-checkbox"
+                      />
                     </label>
                     <span>
                       Adjust Price - only when the price is not correct
@@ -40,6 +66,17 @@ export default function OrderModal({ course, onClose }) {
                   </div>
                 </div>
                 <input
+                  disabled={!enablePrice}
+                  value={order.price}
+                  onChange={({ target: { value } }) => {
+                    if (isNaN(value)) {
+                      return;
+                    }
+                    setOrder({
+                      ...order,
+                      price: value,
+                    });
+                  }}
                   type="text"
                   name="price"
                   id="price"
