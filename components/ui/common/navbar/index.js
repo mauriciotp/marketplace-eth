@@ -1,8 +1,8 @@
 import { useWeb3 } from "@components/providers";
-import Link from "next/link";
 import { Button } from "@components/ui/common";
 import { useAccount } from "@components/hooks/web3";
 import { useRouter } from "next/router";
+import { ActiveLink } from "@components/ui/common";
 
 export default function Navbar() {
   const { connect, isLoading, requireInstall } = useWeb3();
@@ -14,29 +14,27 @@ export default function Navbar() {
       <div className="relative pt-6 px-4 sm:px-6 lg:px-8">
         <nav className="relative" aria-label="Global">
           <div className="flex justify-between items-center">
-            <div>
-              <Link href="/">
-                <a className="font-medium mr-8 text-gray-500 hover:text-gray-900">
-                  Home
-                </a>
-              </Link>
-              <Link href="/marketplace">
-                <a className="font-medium mr-8 text-gray-500 hover:text-gray-900">
+            <div className="text-gray-500">
+              <ActiveLink href="/">
+                <a className="font-medium mr-8 hover:text-gray-900">Home</a>
+              </ActiveLink>
+              <ActiveLink href="/marketplace">
+                <a className="font-medium mr-8 hover:text-gray-900">
                   Marketplace
                 </a>
-              </Link>
-              <Link href="/blogs">
-                <a className="font-medium mr-8 text-gray-500 hover:text-gray-900">
-                  Blogs
-                </a>
-              </Link>
+              </ActiveLink>
+              <ActiveLink href="/blogs">
+                <a className="font-medium mr-8 hover:text-gray-900">Blogs</a>
+              </ActiveLink>
             </div>
             <div>
-              <Link href="/wishlist">
-                <a className="font-medium mr-8 text-gray-500 hover:text-gray-900">
-                  Wishlist
-                </a>
-              </Link>
+              <div className="text-gray-500 inline">
+                <ActiveLink href="/wishlist">
+                  <a className="font-medium mr-8 hover:text-gray-900">
+                    Wishlist
+                  </a>
+                </ActiveLink>
+              </div>
               {isLoading ? (
                 <Button disabled={true} onClick={connect}>
                   Loading...
