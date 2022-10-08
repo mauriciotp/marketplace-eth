@@ -15,10 +15,13 @@ export default function OwnedCourses({ courses }) {
         <MarketHeader />
       </div>
       <section className="grid grid-cols-1">
-        <OwnedCourseCard>
-          <Message />
-          <Button>Watch the course</Button>
-        </OwnedCourseCard>
+        {ownedCourses.data &&
+          ownedCourses.data.map((course) => (
+            <OwnedCourseCard key={course.id} course={course}>
+              {/* <Message>My custom message!</Message> */}
+              <Button>Watch the course</Button>
+            </OwnedCourseCard>
+          ))}
       </section>
     </BaseLayout>
   );
