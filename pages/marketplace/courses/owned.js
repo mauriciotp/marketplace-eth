@@ -11,7 +11,6 @@ export default function OwnedCourses({ courses }) {
 
   return (
     <BaseLayout>
-      {JSON.stringify(ownedCourses.data)}
       <div className="py-4">
         <MarketHeader />
       </div>
