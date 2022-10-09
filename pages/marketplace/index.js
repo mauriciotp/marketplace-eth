@@ -53,9 +53,7 @@ export default function Marketplace({ courses }) {
 
   return (
     <BaseLayout>
-      <div className="py-4">
-        <MarketHeader />
-      </div>
+      <MarketHeader />
       <CourseList courses={courses}>
         {(course) => (
           <CourseCard
