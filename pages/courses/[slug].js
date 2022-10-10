@@ -9,6 +9,8 @@ export default function Course({ course }) {
   const { ownedCourse } = useOwnedCourse(course, account.data);
   const courseState = ownedCourse.data?.state;
 
+  const isLocked = courseState === "purchased" || courseState === "deactivated";
+
   return (
     <BaseLayout>
       <div className="py-4">
@@ -48,7 +50,7 @@ export default function Course({ course }) {
         </div>
       )}
 
-      <Curriculum locked={true} />
+      <Curriculum locked={isLocked} courseState={courseState} />
       <Modal />
     </BaseLayout>
   );
