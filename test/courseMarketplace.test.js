@@ -17,6 +17,8 @@ contract("CourseMarketplace", (accounts) => {
   });
 
   describe("Purchase the new course", () => {
+    let courseHash;
+
     before(async () => {
       await _contract.purchaseCourse(courseId, proof, {
         from: buyer,
@@ -26,7 +28,7 @@ contract("CourseMarketplace", (accounts) => {
 
     it("can get the purchased course hash by index", async () => {
       const index = 0;
-      const courseHash = await _contract.getCourseHashAtIndex(index);
+      courseHash = await _contract.getCourseHashAtIndex(index);
 
       const expectedHash = web3.utils.soliditySha3(
         {
@@ -43,6 +45,22 @@ contract("CourseMarketplace", (accounts) => {
         courseHash,
         expectedHash,
         "Course hash is not matching the hash of purchased course!"
+      );
+    });
+
+    it("should match the data of the course purchased by buyer", async () => {
+      const expectedIndex = 0;
+      const expectedState = 0;
+      const course = await _contract.getCourseByHash(courseHash);
+
+      assert.equal(course.id, expectedIndex, "Course index should be 0!");
+      assert.equal(course.price, value, `Course price should be ${value}!`);
+      assert.equal(course.proof, proof, `Course proof should be ${proof}!`);
+      assert.equal(course.owner, buyer, `Course buyer should be ${buyer}!`);
+      assert.equal(
+        course.state,
+        expectedState,
+        `Course buyer should be ${expectedState}!`
       );
     });
   });
