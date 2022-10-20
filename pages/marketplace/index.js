@@ -1,6 +1,6 @@
 import { useWalletInfo } from "@components/hooks/web3";
 import { useWeb3 } from "@components/providers";
-import { Button } from "@components/ui/common";
+import { Button, Loader } from "@components/ui/common";
 import { CourseCard, CourseList } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
 import { MarketHeader } from "@components/ui/marketplace";
@@ -9,9 +9,9 @@ import { getAllCourses } from "@content/courses/fetcher";
 import { useState } from "react";
 
 export default function Marketplace({ courses }) {
-  const { web3, contract } = useWeb3();
+  const { web3, contract, requireInstall } = useWeb3();
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const { canPurchaseCourse, account } = useWalletInfo();
+  const { hasConnectedWallet, isConnecting, account } = useWalletInfo();
 
   const purchaseCourse = async (order) => {
     const hexCourseId = web3.utils.utf8ToHex(selectedCourse.id);
@@ -58,19 +58,35 @@ export default function Marketplace({ courses }) {
         {(course) => (
           <CourseCard
             key={course.id}
-            disabled={!canPurchaseCourse}
+            disabled={!hasConnectedWallet}
             course={course}
-            Footer={() => (
-              <div className="mt-4">
+            Footer={() => {
+              if (requireInstall) {
+                return (
+                  <Button variant="lightPurple" disabled={true}>
+                    Install
+                  </Button>
+                );
+              }
+
+              if (isConnecting) {
+                return (
+                  <Button variant="lightPurple" disabled={true}>
+                    <Loader size="sm" />
+                  </Button>
+                );
+              }
+
+              return (
                 <Button
                   variant="lightPurple"
-                  disabled={!canPurchaseCourse}
+                  disabled={!hasConnectedWallet}
                   onClick={() => setSelectedCourse(course)}
                 >
                   Purchase
                 </Button>
-              </div>
-            )}
+              );
+            }}
           />
         )}
       </CourseList>
