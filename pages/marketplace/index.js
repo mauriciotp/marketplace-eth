@@ -56,71 +56,65 @@ export default function Marketplace({ courses }) {
     <BaseLayout>
       <MarketHeader />
       <CourseList courses={courses}>
-        {(course) => (
-          <CourseCard
-            key={course.id}
-            disabled={!hasConnectedWallet}
-            course={course}
-            Footer={() => {
-              if (requireInstall) {
-                return (
-                  <Button variant="lightPurple" disabled={true}>
-                    Install
-                  </Button>
-                );
-              }
-
-              if (isConnecting) {
-                return (
-                  <Button variant="lightPurple" disabled={true}>
-                    <Loader size="sm" />
-                  </Button>
-                );
-              }
-
-              if (!ownedCourses.hasInitialResponse) {
-                return <div style={{ height: "50px" }}></div>;
-              }
-
-              const owned = ownedCourses.lookup[course.id];
-
-              if (owned) {
-                return (
-                  <>
-                    <Button variant="green" disabled={true}>
-                      Owned
+        {(course) => {
+          const owned = ownedCourses.lookup[course.id];
+          return (
+            <CourseCard
+              key={course.id}
+              disabled={!hasConnectedWallet}
+              course={course}
+              state={owned?.state}
+              Footer={() => {
+                if (requireInstall) {
+                  return (
+                    <Button variant="lightPurple" disabled={true}>
+                      Install
                     </Button>
-                    <div className="mt-1">
-                      {owned.state === "activated" && (
-                        <Message size="sm">Activated</Message>
-                      )}
-                      {owned.state === "deactivated" && (
-                        <Message type="danger" size="sm">
-                          Deactivated
-                        </Message>
-                      )}
-                      {owned.state === "purchased" && (
-                        <Message type="warning" size="sm">
-                          Waiting for activation
-                        </Message>
-                      )}
-                    </div>
-                  </>
-                );
-              }
+                  );
+                }
 
-              return (
-                <Button
-                  variant="lightPurple"
-                  disabled={!hasConnectedWallet}
-                  onClick={() => setSelectedCourse(course)}
-                >
-                  Purchase
-                </Button>
-              );
-            }}
-          />
-        )}
+                if (isConnecting) {
+                  return (
+                    <Button variant="lightPurple" disabled={true}>
+                      <Loader size="sm" />
+                    </Button>
+                  );
+                }
+
+                if (!ownedCourses.hasInitialResponse) {
+                  return <div style={{ height: "50px" }}></div>;
+                }
+
+                if (owned) {
+                  return (
+                    <>
+                      <div>
+                        <Button variant="green" disabled={true}>
+                          Owned
+                        </Button>
+                        {owned.state === "deactivated" && (
+                          <Button variant="purple" disabled={false}>
+                            Fund to Activate
+                          </Button>
+                        )}
+                      </div>
+                    </>
+                  );
+                }
+
+                return (
+                  <Button
+                    variant="lightPurple"
+                    disabled={!hasConnectedWallet}
+                    onClick={() => setSelectedCourse(course)}
+                  >
+                    Purchase
+                  </Button>
+                );
+              }}
+            />
+          );
+        }}
       </CourseList>
       {selectedCourse && (
         <OrderModal
