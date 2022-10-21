@@ -29,6 +29,7 @@ const VerificationInput = ({ onVerify }) => {
 export default function ManagedCourses() {
   const { web3, contract } = useWeb3();
   const [searchedCourse, setSearchedCourse] = useState(null);
+  const [filters, setFilters] = useState({ state: "all" });
   const [proofedOwnership, setProofedOwnership] = useState({});
   const { account } = useAdmin({ redirectTo: "/marketplace" });
   const { managedCourses } = useManagedCourses(account);
@@ -71,10 +72,6 @@ export default function ManagedCourses() {
   const deactivateCourse = async (courseHash) => {
     changeCourseState(courseHash, "deactivateCourse");
   };
-
-  useEffect(() => {
-    console.log(searchedCourse);
-  }, [searchedCourse]);
 
   const searchCourse = async (hash) => {
     const re = /[0-9A-Fa-f]{6}/g;
@@ -135,7 +132,10 @@ export default function ManagedCourses() {
   return (
     <BaseLayout>
       <MarketHeader />
-      <CourseFilter onSearchSubmit={searchCourse} />
+      <CourseFilter
+        onFilterSelect={(value) => setFilters({ state: value })}
+        onSearchSubmit={searchCourse}
+      />
       <section className="grid grid-cols-1">
         {searchedCourse && (
           <div>
