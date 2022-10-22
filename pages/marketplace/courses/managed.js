@@ -5,7 +5,7 @@ import { CourseFilter, ManagedCourseCard } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
 import { MarketHeader } from "@components/ui/marketplace";
 import { normalizeOwnedCourse } from "@utils/normalize";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const VerificationInput = ({ onVerify }) => {
   const [email, setEmail] = useState("");
@@ -35,6 +35,9 @@ export default function ManagedCourses() {
   const { managedCourses } = useManagedCourses(account);
 
   const verifyCourse = (email, { hash, proof }) => {
+    if (!email) {
+      return;
+    }
     const emailHash = web3.utils.sha3(email);
     const proofToCheck = web3.utils.soliditySha3(
       {

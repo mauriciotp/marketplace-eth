@@ -16,6 +16,8 @@ contract CourseMarketplace {
     State state;
   }
 
+  bool public isStopped = false;
+
   mapping(bytes32 => Course) private ownedCourses;
 
   mapping(uint256 => bytes32) private ownedCourseHash;
@@ -50,7 +52,24 @@ contract CourseMarketplace {
     _;
   }
 
-  function purchaseCourse(bytes16 courseId, bytes32 proof) external payable {
+  modifier onlyWhenNotStopped() {
+    require(!isStopped);
+    _;
+  }
+
+  function stopContract() external onlyOwner {
+    isStopped = true;
+  }
+
+  function resumeContract() external onlyOwner {
+    isStopped = false;
+  }
+
+  function purchaseCourse(bytes16 courseId, bytes32 proof)
+    external
+    payable
+    onlyWhenNotStopped
+  {
     bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
 
     if (hasCourseOwnership(courseHash)) {
@@ -68,7 +87,11 @@ contract CourseMarketplace {
     });
   }
 
-  function repurchaseCourse(bytes32 courseHash) external payable {
+  function repurchaseCourse(bytes32 courseHash)
+    external
+    payable
+    onlyWhenNotStopped
+  {
     if (!isCourseCreated(courseHash)) {
       revert CourseIsNotCreated();
     }
@@ -87,7 +110,11 @@ contract CourseMarketplace {
     course.price = msg.value;
   }
 
-  function activateCourse(bytes32 courseHash) external onlyOwner {
+  function activateCourse(bytes32 courseHash)
+    external
+    onlyWhenNotStopped
+    onlyOwner
+  {
     if (!isCourseCreated(courseHash)) {
       revert CourseIsNotCreated();
     }
@@ -101,7 +128,11 @@ contract CourseMarketplace {
     course.state = State.Activated;
   }
 
-  function deactivateCourse(bytes32 courseHash) external onlyOwner {
+  function deactivateCourse(bytes32 courseHash)
+    external
+    onlyWhenNotStopped
+    onlyOwner
+  {
     if (!isCourseCreated(courseHash)) {
       revert CourseIsNotCreated();
     }
