@@ -1,12 +1,13 @@
 import { useOwnedCourses, useWalletInfo } from "@components/hooks/web3";
 import { useWeb3 } from "@components/providers";
-import { Button, Loader, Message } from "@components/ui/common";
+import { Button, Loader } from "@components/ui/common";
 import { CourseCard, CourseList } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
 import { MarketHeader } from "@components/ui/marketplace";
 import { OrderModal } from "@components/ui/order";
 import { getAllCourses } from "@content/courses/fetcher";
 import { useState } from "react";
+import { withToast } from "test/utils/toast";
 
 export default function Marketplace({ courses }) {
   const { web3, contract, requireInstall } = useWeb3();
@@ -43,31 +44,35 @@ export default function Marketplace({ courses }) {
           value: orderHash,
         }
       );
-      _purchaseCourse(hexCourseId, proof, value);
+      withToast(_purchaseCourse(hexCourseId, proof, value));
     } else {
-      _repurchaseCourse(orderHash, value);
+      withToast(_repurchaseCourse(orderHash, value));
     }
   };
 
   const _purchaseCourse = async (hexCourseId, proof, value) => {
     try {
-      await contract.methods.purchaseCourse(hexCourseId, proof).send({
-        from: account.data,
-        value,
-      });
-    } catch {
-      console.error("Purchase course: Operation has failed.");
+      const result = await contract.methods
+        .purchaseCourse(hexCourseId, proof)
+        .send({
+          from: account.data,
+          value,
+        });
+      return result;
+    } catch (error) {
+      throw new Error(error.message);
     }
   };
 
   const _repurchaseCourse = async (courseHash, value) => {
     try {
-      await contract.methods.repurchaseCourse(courseHash).send({
+      const result = await contract.methods.repurchaseCourse(courseHash).send({
         from: account.data,
         value,
       });
-    } catch {
-      console.error("Reurchase course: Operation has failed.");
+      return result;
+    } catch (error) {
+      throw new Error(error.message);
     }
   };
 
