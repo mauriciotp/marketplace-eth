@@ -138,7 +138,7 @@ export default function Marketplace({ courses }) {
                 if (!ownedCourses.hasInitialResponse) {
                   return (
                     <Button variant="white" disabled={true} size="sm">
-                      Loading State...
+                      {hasConnectedWallet ? "Loading State..." : "Connect"}
                     </Button>
                   );
                 }
